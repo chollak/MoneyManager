@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <title>Hello, world!</title>
+</head>
+
+<body class="bg-light">
+    <div id="app">
+        <div class="sticky-top">
+            <nav class="nav justify-content-center bg-white">
+                <a class="nav-link" href="#" @click="changeView('home')">Home</a>
+                <a class="nav-link" href="#" @click="changeView('copy')">To copy</a>
+                <a class="nav-link" href="#" @click="changeView('stats')">Statistics</a>
+                <a class="nav-link" href="#" @click="changeView('settings')">Settings</a>
+            </nav>
+            <div class="container-fluid">
+                <div class="progress" style="height:5px">
+                    <div class="progress-bar" role="progressbar"
+                        v-bind:style="{ width: getSum*100/settings.property + '%' }"></div>
+                </div>
+                <!-- <h3 class="text-center">{{settings.property}} - {{getSum}} = {{settings.property - getSum}}</h3> -->
+            </div>
+        </div>
+        <br>
+        <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    </li>
+                </ul>
+            </div>
+        </nav> -->
+        <div class="container">
+            <!-- <br> -->
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+
+                    <template v-if="settings.page=='home'">
+                        <div class="row">
+                            <div class="col">
+                                <h3>Overall</h3>
+                            </div>
+                            <div class="col text-right">
+                                <h3>{{getSum}} sum</h3>
+                            </div>
+                        </div>
+                        <hr>
+
+
+
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Name" v-model="newItem.name">
+                            <input type="number" class="form-control" placeholder="Cost" v-model="newItem.cost">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" @click="addNewItem">Add</button>
+                            </div>
+                        </div>
+
+                        <nav class="nav nav-pills justify-content-center">
+                            <a class="nav-link" href="#" v-bind:class="{ active: sortNameActive }"
+                                @click="sort('name')">Sort by Name</a>
+                            <a class="nav-link" href="#" v-bind:class="{ active: sortCostActive }"
+                                @click="sort('cost')">Sort by Cost</a>
+                            <a class="nav-link" href="#" v-bind:class="{ active: sortTimeActive }"
+                                @click="sort('time')">Sort by Time</a>
+                        </nav>
+                        <br>
+                        <ul class="list-group">
+                            <li class="list-group-item" v-for="(item,n) in items" v-bind:key="item.id">
+                                <div class="row">
+                                    <div class="col-10">
+                                        <blockquote class="blockquote">
+                                            <p class="mb-0">{{item.name}} - <b>{{item.cost}}</b></p>
+                                            <footer class="blockquote-footer" v-html="item.date"></footer>
+                                        </blockquote>
+                                    </div>
+                                    <div class="col-2 text-right"><span class="badge badge-danger badge-pill"
+                                            @click="removeItem(n)">X</span></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </template>
+
+                    <template v-if="settings.page=='copy'">
+                        <h3>Copy</h3>
+                        <hr>
+                        <samp class="d-flex flex-column">
+                            <template v-for="item in items">
+                                <span>{{item.name}} - {{item.cost}}</span>
+                            </template>
+                        </samp>
+
+                    </template>
+
+                    <template v-if="settings.page=='stats'">
+                        <h3>Statistics</h3>
+                        <hr>
+                        <div class="input-group mb-3">
+                            <!-- <div class="input-group-prepend">
+                                <label class="input-group-text" for="inputGroupSelect01">Choose month</label>
+                            </div> -->
+                            <input type="month" v-model="getYearMonth" class="form-control">
+                            
+                            <!-- <select v-model="selectedMonth" class="custom-select" id="inputGroupSelect01">
+                                <option value="0">January</option>
+                                <option value="1">February</option>
+                                <option value="2">March</option>
+                                <option value="3">April</option>
+                                <option value="4">May</option>
+                                <option value="5">June</option>
+                                <option value="6">July</option>
+                                <option value="7">August</option>
+                                <option value="8">September</option>
+                                <option value="9">October</option>
+                                <option value="10">November</option>
+                                <option value="11">December</option>
+                            </select> -->
+                        </div>
+                        {{selectedMonth}}
+                        <hr>
+                        {{getYearMonth}}
+                        <!-- <nav class="nav nav-pills justify-content-center">
+                            <a class="nav-link" href="#">January</a>
+                            <a class="nav-link" href="#">February</a>
+                            <a class="nav-link" href="#">March</a>
+                            <a class="nav-link" href="#">April</a>
+                            <a class="nav-link" href="#">May</a>
+                            <a class="nav-link" href="#">June</a>
+                            <a class="nav-link" href="#">July</a>
+                            <a class="nav-link" href="#">August</a>
+                            <a class="nav-link" href="#">September</a>
+                            <a class="nav-link" href="#">October</a>
+                            <a class="nav-link" href="#">November</a>
+                            <a class="nav-link" href="#">December</a>
+                        </nav> -->
+                        <!-- <template v-for="item in items">
+                            {{getWeekNumber(item.fulltime)}}
+                        </template> -->
+                        <template v-for="item in items" v-if="getWeekNumber(item.fulltime)==selectedMonth">
+                                <span>{{item.name}} - {{item.cost}}</span>
+                                <hr>
+                        </template>
+                    </template>
+
+                    <template v-if="settings.page=='settings'">
+                        <h3 class="d-flex justify-content-between align-items-center">Settings <small class="text-muted"
+                                @click="saveSettings">save</small></h3>
+                        <hr>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col">Full name</div>
+                                    <div class="col">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" v-model="settings.fullname"
+                                                class="form-control text-center">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col">Current property</div>
+                                    <div class="col">
+                                        <div class="input-group input-group-sm">
+                                            <input type="number" v-model="settings.property"
+                                                class="form-control text-center">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </template>
+
+
+
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <script src="js/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- <script src="js/bootstrap.js"></script> -->
+    <script src="js/scripts.js"></script>
+    <script>
+        console.log(app.settings.page);
+    </script>
+    <!-- <script>
+        function sett(){
+            return app.tt=new Date().toLocaleDateString()+" - "+new Date().toLocaleTimeString();
+        }
+        setInterval(sett, 1000);
+    </script> -->
+    <script>
+        var tmp = new Date(app.items[0].fulltime);
+        tmp.setMonth(2);
+        app.items[0].fulltime = tmp;
+        tmp = new Date(app.items[4].fulltime);
+        tmp.setMonth(2);
+        app.items[4].fulltime = tmp;
+        tmp = new Date(app.items[7].fulltime);
+        tmp.setMonth(6);
+        app.items[7].fulltime = tmp;
+        tmp = new Date(app.items[6].fulltime);
+        tmp.setMonth(6);
+        app.items[6].fulltime = tmp;
+
+    </script>
+    <script>
+    var tr=new Date(app.selectedMonth);    
+    var ty= new Date(app.items[2].fulltime);
+    console.log(tr.getDate() + " " + ty.getDate());
+    console.log(tr.getFullYear()==ty.getFullYear());
+    console.log(typeof(app.selectedMonth));
+    </script>
+</body>
+
+</html>
+
+
+<!-- 
+
+    { name: "Lays", cost: "7000", date: "30.05.2019 at <cite>19:15:14</cite>" },
+      { name: "Pepsi", cost: "3500", date: "30.05.2019 at <cite>19:15:29</cite>" },
+      { name: "Lavash", cost: "11500", date: "30.05.2019 at <cite>19:16:09</cite>" },
+      { name: "Burger", cost: "8800", date: "30.05.2019 at <cite>19:16:19</cite>" },
+      { name: "Tea", cost: "2000", date: "30.05.2019 at <cite>19:16:33</cite>" },
+      { name: "Water", cost: "1000", date: "30.05.2019 at <cite>19:16:38</cite>" },
+      { name: "Coffee", cost: "2000", date: "30.05.2019 at <cite>19:16:47</cite>" },
+      { name: "Обед", cost: "15000", date: "30.05.2019 at <cite>20:44:47</cite>" },
+      { name: "Колбаса", cost: "22000", date: "30.05.2019 at <cite>20:45:15</cite>" },
+      { name: "New item 1", cost: "23000", date: "30.05.2019 at <cite>23:23:11</cite>" },
+      { name: "New item 2 ", cost: "15000", date: "30.05.2019 at <cite>23:23:18</cite>" },
+      { name: "New item 3", cost: "5000", date: "30.05.2019 at <cite>23:23:30</cite>" },
+      { name: "New item 4", cost: "1200", date: "30.05.2019 at <cite>23:23:42</cite>" },
+      { name: "New item 5", cost: "4500", date: "30.05.2019 at <cite>23:23:52</cite>" },
+      { name: "New item 6 ", cost: "4500", date: "30.05.2019 at <cite>23:24:01</cite>" },
+ -->

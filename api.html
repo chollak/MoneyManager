@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <title>Hello, world!</title>
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <!-- {{info}} -->
+            <div v-for="item in info">
+                    <template v-if="item.tag=='p'">
+                        <p>
+                            <!-- {{item.children}} -->
+                        </p>
+                    </template>
+                    <template v-if="item.tag=='figure'">
+                        <img :src="item.children[0].attrs.src" alt="">
+                        
+                    </template>
+                </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <script src="js/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- <script src="js/bootstrap.js"></script> -->
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>
