@@ -31,29 +31,7 @@
             </div>
         </div>
         <br>
-        <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Features</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Pricing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                    </li>
-                </ul>
-            </div>
-        </nav> -->
+
         <div class="container">
             <!-- <br> -->
             <div class="row">
@@ -82,11 +60,17 @@
 
                         <nav class="nav nav-pills justify-content-center">
                             <a class="nav-link" href="#" v-bind:class="{ active: sortNameActive }"
-                                @click="sort('name')">Sort by Name</a>
+                                @click="sort('name',isReversed)">Sort by Name <template
+                                    v-if="isReversed==1 && sortNameActive">↑</template><template
+                                    v-if="isReversed==2 && sortNameActive">↓</template></a>
                             <a class="nav-link" href="#" v-bind:class="{ active: sortCostActive }"
-                                @click="sort('cost')">Sort by Cost</a>
+                                @click="sort('cost',isReversed)">Sort by Cost <template
+                                    v-if="isReversed==1 && sortCostActive">↑</template><template
+                                    v-if="isReversed==2 && sortCostActive">↓</template></a>
                             <a class="nav-link" href="#" v-bind:class="{ active: sortTimeActive }"
-                                @click="sort('time')">Sort by Time</a>
+                                @click="sort('time',isReversed)">Sort by Time <template
+                                    v-if="isReversed==1 && sortTimeActive">↑</template><template
+                                    v-if="isReversed==2 && sortTimeActive">↓</template></a>
                         </nav>
                         <br>
                         <ul class="list-group">
@@ -95,11 +79,27 @@
                                     <div class="col-10">
                                         <blockquote class="blockquote">
                                             <p class="mb-0">{{item.name}} - <b>{{item.cost}}</b></p>
-                                            <footer class="blockquote-footer" v-html="item.date"></footer>
+                                            <footer class="blockquote-footer" v-html="item.date">
+
+                                            </footer>
+                                            <template v-if="editStatus && editedItem==n">
+                                                <div class="input-group mt-3">
+                                                    <input type="text" class="form-control" placeholder="Name"
+                                                        v-model="item.name">
+                                                    <input type="number" class="form-control" placeholder="Cost"
+                                                        v-model="item.cost">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-outline-secondary" type="button"
+                                                            @click="saveItems">Save</button>
+                                                    </div>
+                                                </div>
+                                            </template>
                                         </blockquote>
                                     </div>
-                                    <div class="col-2 text-right"><span class="badge badge-danger badge-pill"
-                                            @click="removeItem(n)">X</span></div>
+                                    <div class="col-2 text-right">
+                                        <span class="badge badge-primary badge-pill" @click="editItem(n)">¶</span>
+                                        <span class="badge badge-danger badge-pill" @click="removeItem(n)">X</span>
+                                    </div>
                                 </div>
                             </li>
                         </ul>
@@ -108,6 +108,20 @@
                     <template v-if="settings.page=='copy'">
                         <h3>Copy</h3>
                         <hr>
+                        <nav class="nav nav-pills justify-content-center mb-3">
+                            <a class="nav-link" href="#" v-bind:class="{ active: sortNameActive }"
+                                @click="sort('name',isReversed)">Sort by Name <template
+                                    v-if="isReversed==1 && sortNameActive">↑</template><template
+                                    v-if="isReversed==2 && sortNameActive">↓</template></a>
+                            <a class="nav-link" href="#" v-bind:class="{ active: sortCostActive }"
+                                @click="sort('cost',isReversed)">Sort by Cost <template
+                                    v-if="isReversed==1 && sortCostActive">↑</template><template
+                                    v-if="isReversed==2 && sortCostActive">↓</template></a>
+                            <a class="nav-link" href="#" v-bind:class="{ active: sortTimeActive }"
+                                @click="sort('time',isReversed)">Sort by Time <template
+                                    v-if="isReversed==1 && sortTimeActive">↑</template><template
+                                    v-if="isReversed==2 && sortTimeActive">↓</template></a>
+                        </nav>
                         <samp class="d-flex flex-column">
                             <template v-for="item in items">
                                 <span>{{item.name}} - {{item.cost}}</span>
@@ -117,52 +131,18 @@
                     </template>
 
                     <template v-if="settings.page=='stats'">
-                        <h3>Statistics</h3>
+                        <h3>Statistics <small>{{monthSum}}</small></h3>
                         <hr>
                         <div class="input-group mb-3">
-                            <!-- <div class="input-group-prepend">
-                                <label class="input-group-text" for="inputGroupSelect01">Choose month</label>
-                            </div> -->
-                            <input type="month" v-model="getYearMonth" class="form-control">
-                            
-                            <!-- <select v-model="selectedMonth" class="custom-select" id="inputGroupSelect01">
-                                <option value="0">January</option>
-                                <option value="1">February</option>
-                                <option value="2">March</option>
-                                <option value="3">April</option>
-                                <option value="4">May</option>
-                                <option value="5">June</option>
-                                <option value="6">July</option>
-                                <option value="7">August</option>
-                                <option value="8">September</option>
-                                <option value="9">October</option>
-                                <option value="10">November</option>
-                                <option value="11">December</option>
-                            </select> -->
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="inputGroupSelect01">Year and Month</label>
+                            </div>
+                            <input type="month" v-model="selectedMonth" class="form-control">
                         </div>
-                        {{selectedMonth}}
-                        <hr>
-                        {{getYearMonth}}
-                        <!-- <nav class="nav nav-pills justify-content-center">
-                            <a class="nav-link" href="#">January</a>
-                            <a class="nav-link" href="#">February</a>
-                            <a class="nav-link" href="#">March</a>
-                            <a class="nav-link" href="#">April</a>
-                            <a class="nav-link" href="#">May</a>
-                            <a class="nav-link" href="#">June</a>
-                            <a class="nav-link" href="#">July</a>
-                            <a class="nav-link" href="#">August</a>
-                            <a class="nav-link" href="#">September</a>
-                            <a class="nav-link" href="#">October</a>
-                            <a class="nav-link" href="#">November</a>
-                            <a class="nav-link" href="#">December</a>
-                        </nav> -->
-                        <!-- <template v-for="item in items">
-                            {{getWeekNumber(item.fulltime)}}
-                        </template> -->
-                        <template v-for="item in items" v-if="getWeekNumber(item.fulltime)==selectedMonth">
-                                <span>{{item.name}} - {{item.cost}}</span>
-                                <hr>
+                        <template v-for="item in items"
+                            v-if="new Date(item.fulltime).getMonth()==new Date(selectedMonth).getMonth() && new Date(item.fulltime).getFullYear()==new Date(selectedMonth).getFullYear()">
+                            <span>{{item.name}} - {{item.cost}}</span>
+                            <hr>
                         </template>
                     </template>
 
@@ -211,33 +191,8 @@
     <script>
         console.log(app.settings.page);
     </script>
-    <!-- <script>
-        function sett(){
-            return app.tt=new Date().toLocaleDateString()+" - "+new Date().toLocaleTimeString();
-        }
-        setInterval(sett, 1000);
-    </script> -->
     <script>
-        var tmp = new Date(app.items[0].fulltime);
-        tmp.setMonth(2);
-        app.items[0].fulltime = tmp;
-        tmp = new Date(app.items[4].fulltime);
-        tmp.setMonth(2);
-        app.items[4].fulltime = tmp;
-        tmp = new Date(app.items[7].fulltime);
-        tmp.setMonth(6);
-        app.items[7].fulltime = tmp;
-        tmp = new Date(app.items[6].fulltime);
-        tmp.setMonth(6);
-        app.items[6].fulltime = tmp;
-
-    </script>
-    <script>
-    var tr=new Date(app.selectedMonth);    
-    var ty= new Date(app.items[2].fulltime);
-    console.log(tr.getDate() + " " + ty.getDate());
-    console.log(tr.getFullYear()==ty.getFullYear());
-    console.log(typeof(app.selectedMonth));
+        console.log();
     </script>
 </body>
 
@@ -262,3 +217,36 @@
       { name: "New item 5", cost: "4500", date: "30.05.2019 at <cite>23:23:52</cite>" },
       { name: "New item 6 ", cost: "4500", date: "30.05.2019 at <cite>23:24:01</cite>" },
  -->
+<!-- 
+    Water - 1500
+    Tea - 2500
+    Pepsi - 3000
+    Test - 3500
+    Coca coal - 4000
+    Coffee - 4000
+    Snickers - 4500
+    KitKat - 5000
+    Internet - 5000
+    Lays - 7000
+    Beeline - 7000
+    Burger - 8500
+    Lavash - 11500
+    INHA - 15000
+    Pizza - 23000
+    
+Water - 1500
+Tea - 2500
+Pepsi - 3000
+Test - 3500
+Coca cola - 4000
+Coffee - 4000
+Snickers - 4500
+Internet - 5000
+KitKat - 5000
+Beeline - 7000
+Lays - 7000
+Burger - 8500
+Lavash - 11500
+INHA - 15000
+Pizza - 23000
+  -->

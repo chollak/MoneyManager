@@ -1,19 +1,8 @@
-Vue.component("m-header", {
-  props: ["nav"],
-  template: `
-      <li>
-        <a href="#nav.url">nav.value</a>
-      </li>
-  `,
-})
 var app = new Vue({
   el: "#app",
   data: {
     items: [],
-    newItem: [
-      { name: "", cost: null, date: null, fulltime: null },
-    ],
-    tt: new Date().toLocaleDateString() + " - " + new Date().toLocaleTimeString(),
+    newItem: { name: "", cost: null, date: null, fulltime: null },
     sortNameActive: 0,
     sortCostActive: 0,
     sortTimeActive: 0,
@@ -22,7 +11,11 @@ var app = new Vue({
       property: null,
       fullname: "",
     },
-    selectedMonth:new Date().toString(),
+    selectedMonth: "",
+    monthSum: 0,
+    editStatus: false,
+    editedItem: 0,
+    isReversed: 1,
   },
   mounted() {
     if (localStorage.getItem('n-items')) {
@@ -38,11 +31,19 @@ var app = new Vue({
       } catch (e) {
         localStorage.removeItem('n-settings');
       }
-
+    }
+  },
+  created() {
+    var tmp = new Date();
+    this.selectedMonth = tmp.getFullYear() + "-";
+    if ((tmp.getMonth() + 1) < 10) {
+      this.selectedMonth += "0" + (tmp.getMonth() + 1);
+    } else {
+      this.selectedMonth += (tmp.getMonth() + 1);
     }
   },
   methods: {
-    sort: function (type) {
+    sort: function (type, rev) {
       if (type == 'name') {
         this.sortNameActive = 1;
         this.sortCostActive = 0;
@@ -51,23 +52,41 @@ var app = new Vue({
           if (a.name > b.name) return 1;
           else return -1;
         });
+        if (rev == 2) {
+          this.items.reverse();
+          this.isReversed = 0;
+        }
       } else if (type == "cost") {
         this.sortNameActive = 0;
         this.sortCostActive = 1;
         this.sortTimeActive = 0;
-        app.items.sort(function (a, b) {
+        this.items.sort(function (a, b) {
           return a.cost - b.cost;
         });
+        if (rev == 2) {
+          this.items.reverse();
+          this.isReversed = 0;
+        }
       } else if (type == "time") {
         this.sortNameActive = 0;
         this.sortCostActive = 0;
         this.sortTimeActive = 1;
-        app.items.sort(function (a, b) {
-          if (a.date > b.date) return 1;
-          else return -1;
+        this.items.sort(function (a, b) {
+          var ta = new Date(a.fulltime);
+          var tb = new Date(b.fulltime);
+          // console.log(a.name +" "+b.name);
+          // console.log(ta.getTime() +" "+tb.getTime());
+          return ta.getTime() - tb.getTime();
         });
+        if (rev == 2) {
+          this.items.reverse();
+          this.isReversed = 0;
+        }
       }
+      this.isReversed++;
+      console.log(this.isReversed);
     },
+
     addNewItem: function () {
       if (!this.newItem.name && !this.newItem.cost) {
         return;
@@ -85,6 +104,13 @@ var app = new Vue({
       this.newItem.cost = "";
       this.saveItems();
     },
+    editItem: function (x) {
+      // this.newItem.name=this.items[x].name;
+      // this.newItem.cost=this.items[x].cost;
+      this.editStatus = true;
+      this.editedItem = x;
+
+    },
     removeItem: function (x) {
       this.items.splice(x, 1);
       this.saveItems();
@@ -101,7 +127,7 @@ var app = new Vue({
       const parsed = JSON.stringify(this.settings);
       localStorage.setItem("n-settings", parsed);
     },
-    saveSettings:function(){
+    saveSettings: function () {
       const parsed = JSON.stringify(this.settings);
       localStorage.setItem("n-settings", parsed);
     },
@@ -114,11 +140,6 @@ var app = new Vue({
       }
       return sum;
     },
-    getYearMonth:function(){
-      var tmp = new Date();
-      return tmp.getFullYear()+"-0"+(tmp.getMonth()+1);
-    },
-
   },
 
 });
@@ -138,11 +159,11 @@ var json = [
     "id": 1
   }
 ];
-console.log(json);
-console.log("---------------------------------");
-app.items.sort(function (a, b) {
-  if (a.date > b.date) return 1;
-  else return -1;
-});
-console.log(app.items);
-console.log("---------------------------------");
+// console.log(json);
+// console.log("---------------------------------");
+// app.items.sort(function (a, b) {
+//   if (a.date > b.date) return 1;
+//   else return -1;
+// });
+// console.log(app.items);
+// console.log("---------------------------------");
