@@ -131,21 +131,46 @@
                     </template>
 
                     <template v-if="settings.page=='stats'">
-                        <h3>Statistics <small>{{monthSum}}</small></h3>
+                        <h3 class="d-flex justify-content-between">Statistics <small>{{getSumByMonth}} sums</small></h3>
                         <hr>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <label class="input-group-text" for="inputGroupSelect01">Year and Month</label>
                             </div>
-                            <input type="month" v-model="selectedMonth" class="form-control">
+                            <input type="month" class="form-control" value="2018-05" v-model="selectM">
                         </div>
-                        <template v-for="item in items"
-                            v-if="new Date(item.fulltime).getMonth()==new Date(selectedMonth).getMonth() && new Date(item.fulltime).getFullYear()==new Date(selectedMonth).getFullYear()">
-                            <span>{{item.name}} - {{item.cost}}</span>
-                            <hr>
-                        </template>
-                    </template>
+                        <ul class="list-group">
+                            <li class="list-group-item" v-for="(item,n) in items" v-bind:key="item.id"
+                                v-if="isVal(item)">
+                                <div class="row">
+                                    <div class="col-10">
+                                        <blockquote class="blockquote">
+                                            <p class="mb-0">{{item.name}} - <b>{{item.cost}}</b></p>
+                                            <footer class="blockquote-footer" v-html="item.date">
 
+                                            </footer>
+                                            <template v-if="editStatus && editedItem==n">
+                                                <div class="input-group mt-3">
+                                                    <input type="text" class="form-control" placeholder="Name"
+                                                        v-model="item.name">
+                                                    <input type="number" class="form-control" placeholder="Cost"
+                                                        v-model="item.cost">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-outline-secondary" type="button"
+                                                            @click="saveItems">Save</button>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </blockquote>
+                                    </div>
+                                    <div class="col-2 text-right">
+                                        <span class="badge badge-primary badge-pill" @click="editItem(n)">¶</span>
+                                        <span class="badge badge-danger badge-pill" @click="removeItem(n)">X</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </template>
                     <template v-if="settings.page=='settings'">
                         <h3 class="d-flex justify-content-between align-items-center">Settings <small class="text-muted"
                                 @click="saveSettings">save</small></h3>
@@ -185,11 +210,17 @@
     </div>
     <!-- Optional JavaScript -->
     <script src="js/vue.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
     <!-- <script src="js/bootstrap.js"></script> -->
     <script src="js/scripts.js"></script>
     <script>
-        console.log(app.settings.page);
+        var qq;
+        qq = new Date(app.items[0].fulltime);
+        qq.setMonth(3)
+        app.items[0].fulltime = new Date(qq);
+        qq = new Date(app.items[4].fulltime);
+        qq.setMonth(3)
+        app.items[4].fulltime = new Date(qq);
     </script>
     <script>
         console.log();

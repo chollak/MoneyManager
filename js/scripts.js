@@ -12,6 +12,7 @@ var app = new Vue({
       fullname: "",
     },
     selectedMonth: "",
+    selectM: "",
     monthSum: 0,
     editStatus: false,
     editedItem: 0,
@@ -35,11 +36,16 @@ var app = new Vue({
   },
   created() {
     var tmp = new Date();
-    this.selectedMonth = tmp.getFullYear() + "-";
+    this.selectM = tmp.getFullYear() + "-";
     if ((tmp.getMonth() + 1) < 10) {
-      this.selectedMonth += "0" + (tmp.getMonth() + 1);
+      this.selectM += "0" + (tmp.getMonth() + 1);
     } else {
-      this.selectedMonth += (tmp.getMonth() + 1);
+      this.selectM += (tmp.getMonth() + 1);
+    }
+  },
+  watch: {
+    selectM: function (newq, oldq) {
+      this.selectedMonth = newq;
     }
   },
   methods: {
@@ -131,12 +137,28 @@ var app = new Vue({
       const parsed = JSON.stringify(this.settings);
       localStorage.setItem("n-settings", parsed);
     },
+    isVal: function (x) {
+      var ta = new Date(x.fulltime);
+      var tb = new Date(this.selectedMonth);
+      return (ta.getMonth() == tb.getMonth() && ta.getFullYear() == tb.getFullYear());
+    },
   },
   computed: {
     getSum: function () {
       var sum = 0;
       for (var i = 0; i < this.items.length; i++) {
         sum += parseInt(this.items[i].cost);
+      }
+      return sum;
+    },
+    getSumByMonth: function () {
+      var sum = 0;
+      var tb = new Date(this.selectedMonth);
+      for (key in this.items) {        
+        var ta = new Date(this.items[key].fulltime);
+        if (ta.getMonth() == tb.getMonth() && ta.getFullYear() == tb.getFullYear()) {
+          sum+=parseInt(this.items[key].cost);
+        }
       }
       return sum;
     },
