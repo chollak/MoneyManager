@@ -199,6 +199,8 @@
                                 </div>
                             </li>
                         </ul>
+                        <hr>
+                        <a href="#" class="btn btn-danger btn-block" @click="deleteAll()">Delete everything</a>
                     </template>
 
 
@@ -213,71 +215,6 @@
     <!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
     <!-- <script src="js/bootstrap.js"></script> -->
     <script src="js/scripts.js"></script>
-    <script>
-        var qq;
-        qq = new Date(app.items[0].fulltime);
-        qq.setMonth(3)
-        app.items[0].fulltime = new Date(qq);
-        qq = new Date(app.items[4].fulltime);
-        qq.setMonth(3)
-        app.items[4].fulltime = new Date(qq);
-    </script>
-    <script>
-        console.log();
-    </script>
 </body>
 
 </html>
-
-
-<!-- 
-
-    { name: "Lays", cost: "7000", date: "30.05.2019 at <cite>19:15:14</cite>" },
-      { name: "Pepsi", cost: "3500", date: "30.05.2019 at <cite>19:15:29</cite>" },
-      { name: "Lavash", cost: "11500", date: "30.05.2019 at <cite>19:16:09</cite>" },
-      { name: "Burger", cost: "8800", date: "30.05.2019 at <cite>19:16:19</cite>" },
-      { name: "Tea", cost: "2000", date: "30.05.2019 at <cite>19:16:33</cite>" },
-      { name: "Water", cost: "1000", date: "30.05.2019 at <cite>19:16:38</cite>" },
-      { name: "Coffee", cost: "2000", date: "30.05.2019 at <cite>19:16:47</cite>" },
-      { name: "Обед", cost: "15000", date: "30.05.2019 at <cite>20:44:47</cite>" },
-      { name: "Колбаса", cost: "22000", date: "30.05.2019 at <cite>20:45:15</cite>" },
-      { name: "New item 1", cost: "23000", date: "30.05.2019 at <cite>23:23:11</cite>" },
-      { name: "New item 2 ", cost: "15000", date: "30.05.2019 at <cite>23:23:18</cite>" },
-      { name: "New item 3", cost: "5000", date: "30.05.2019 at <cite>23:23:30</cite>" },
-      { name: "New item 4", cost: "1200", date: "30.05.2019 at <cite>23:23:42</cite>" },
-      { name: "New item 5", cost: "4500", date: "30.05.2019 at <cite>23:23:52</cite>" },
-      { name: "New item 6 ", cost: "4500", date: "30.05.2019 at <cite>23:24:01</cite>" },
- -->
-<!-- 
-    Water - 1500
-    Tea - 2500
-    Pepsi - 3000
-    Test - 3500
-    Coca coal - 4000
-    Coffee - 4000
-    Snickers - 4500
-    KitKat - 5000
-    Internet - 5000
-    Lays - 7000
-    Beeline - 7000
-    Burger - 8500
-    Lavash - 11500
-    INHA - 15000
-    Pizza - 23000
-    
-Water - 1500
-Tea - 2500
-Pepsi - 3000
-Test - 3500
-Coca cola - 4000
-Coffee - 4000
-Snickers - 4500
-Internet - 5000
-KitKat - 5000
-Beeline - 7000
-Lays - 7000
-Burger - 8500
-Lavash - 11500
-INHA - 15000
-Pizza - 23000
-  -->

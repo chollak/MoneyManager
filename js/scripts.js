@@ -142,6 +142,10 @@ var app = new Vue({
       var tb = new Date(this.selectedMonth);
       return (ta.getMonth() == tb.getMonth() && ta.getFullYear() == tb.getFullYear());
     },
+    deleteAll: function () {
+      localStorage.removeItem('n-items');
+      localStorage.removeItem('n-settings');
+    },
   },
   computed: {
     getSum: function () {
@@ -154,10 +158,10 @@ var app = new Vue({
     getSumByMonth: function () {
       var sum = 0;
       var tb = new Date(this.selectedMonth);
-      for (key in this.items) {        
+      for (key in this.items) {
         var ta = new Date(this.items[key].fulltime);
         if (ta.getMonth() == tb.getMonth() && ta.getFullYear() == tb.getFullYear()) {
-          sum+=parseInt(this.items[key].cost);
+          sum += parseInt(this.items[key].cost);
         }
       }
       return sum;
@@ -165,27 +169,3 @@ var app = new Vue({
   },
 
 });
-
-//new Date().getFullYear
-var json = [
-  {
-    "name": "user1",
-    "id": 3
-  },
-  {
-    "name": "user2",
-    "id": 6
-  },
-  {
-    "name": "user3",
-    "id": 1
-  }
-];
-// console.log(json);
-// console.log("---------------------------------");
-// app.items.sort(function (a, b) {
-//   if (a.date > b.date) return 1;
-//   else return -1;
-// });
-// console.log(app.items);
-// console.log("---------------------------------");
